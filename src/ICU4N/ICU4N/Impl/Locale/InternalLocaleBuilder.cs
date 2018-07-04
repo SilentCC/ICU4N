@@ -35,7 +35,7 @@ namespace ICU4N.Impl.Locale
             {
                 if (!LanguageTag.IsLanguage(language))
                 {
-                    throw new FormatException("Ill-formed language: " + language/*, 0*/);
+                    throw new LocaleSyntaxException("Ill-formed language: " + language/*, 0*/);
                 }
                 _language = language;
             }
@@ -52,7 +52,7 @@ namespace ICU4N.Impl.Locale
             {
                 if (!LanguageTag.IsScript(script))
                 {
-                    throw new FormatException("Ill-formed script: " + script/*, 0*/);
+                    throw new LocaleSyntaxException("Ill-formed script: " + script/*, 0*/);
                 }
                 _script = script;
             }
@@ -69,7 +69,7 @@ namespace ICU4N.Impl.Locale
             {
                 if (!LanguageTag.IsRegion(region))
                 {
-                    throw new FormatException("Ill-formed region: " + region/*, 0*/);
+                    throw new LocaleSyntaxException("Ill-formed region: " + region/*, 0*/);
                 }
                 _region = region;
             }
@@ -89,7 +89,7 @@ namespace ICU4N.Impl.Locale
                 int errIdx = CheckVariants(var, BaseLocale.SEP);
                 if (errIdx != -1)
                 {
-                    throw new FormatException("Ill-formed variant: " + variant /*, errIdx*/);
+                    throw new Loc("Ill-formed variant: " + variant /*, errIdx*/);
                 }
                 _variant = var;
             }
@@ -100,7 +100,7 @@ namespace ICU4N.Impl.Locale
         {
             if (attribute == null || !UnicodeLocaleExtension.IsAttribute(attribute))
             {
-                throw new FormatException("Ill-formed Unicode locale attribute: " + attribute);
+                throw new LocaleSyntaxException("Ill-formed Unicode locale attribute: " + attribute);
             }
             // Use case insensitive string to prevent duplication
             if (_uattributes == null)
@@ -115,7 +115,7 @@ namespace ICU4N.Impl.Locale
         {
             if (attribute == null || !UnicodeLocaleExtension.IsAttribute(attribute))
             {
-                throw new FormatException("Ill-formed Unicode locale attribute: " + attribute);
+                throw new LocaleSyntaxException("Ill-formed Unicode locale attribute: " + attribute);
             }
             if (_uattributes != null)
             {
@@ -128,7 +128,7 @@ namespace ICU4N.Impl.Locale
         {
             if (!UnicodeLocaleExtension.IsKey(key))
             {
-                throw new FormatException("Ill-formed Unicode locale keyword key: " + key);
+                throw new LocaleSyntaxException("Ill-formed Unicode locale keyword key: " + key);
             }
 
             CaseInsensitiveString cikey = new CaseInsensitiveString(key);
@@ -153,7 +153,7 @@ namespace ICU4N.Impl.Locale
                         string s = itr.Current;
                         if (!UnicodeLocaleExtension.IsTypeSubtag(s))
                         {
-                            throw new FormatException("Ill-formed Unicode locale keyword type: " + type /*, itr.CurrentStart*/);
+                            throw new LocaleSyntaxException("Ill-formed Unicode locale keyword type: " + type /*, itr.CurrentStart*/);
                         }
                     }
                 }
@@ -172,7 +172,7 @@ namespace ICU4N.Impl.Locale
             bool isBcpPrivateuse = LanguageTag.IsPrivateusePrefixChar(singleton);
             if (!isBcpPrivateuse && !LanguageTag.IsExtensionSingletonChar(singleton))
             {
-                throw new FormatException("Ill-formed extension key: " + singleton);
+                throw new LocaleSyntaxException("Ill-formed extension key: " + singleton);
             }
 
             bool remove = (value == null || value.Length == 0);
@@ -219,7 +219,7 @@ namespace ICU4N.Impl.Locale
                     }
                     if (!validSubtag)
                     {
-                        throw new FormatException("Ill-formed extension value: " + s /*, itr.CurrentStart*/);
+                        throw new LocaleSyntaxException("Ill-formed extension value: " + s /*, itr.CurrentStart*/);
                     }
                 }
 
@@ -289,7 +289,7 @@ namespace ICU4N.Impl.Locale
 
                     if (parsed < start)
                     {
-                        throw new FormatException("Incomplete extension '" + singleton + "'"/*, start*/);
+                        throw new LocaleSyntaxException("Incomplete extension '" + singleton + "'"/*, start*/);
                     }
 
                     if (extensions == null)
@@ -326,7 +326,7 @@ namespace ICU4N.Impl.Locale
                     }
                     if (parsed <= start)
                     {
-                        throw new FormatException("Incomplete privateuse:" + subtags.Substring(start) /*, start*/);
+                        throw new LocaleSyntaxException("Incomplete privateuse:" + subtags.Substring(start) /*, start*/);
                     }
                     else
                     {
@@ -337,7 +337,7 @@ namespace ICU4N.Impl.Locale
 
             if (!itr.IsDone)
             {
-                throw new FormatException("Ill-formed extension subtags:" + subtags.Substring(itr.CurrentStart)/*, itr.CurrentStart*/);
+                throw new LocaleSyntaxException("Ill-formed extension subtags:" + subtags.Substring(itr.CurrentStart)/*, itr.CurrentStart*/);
             }
 
             return SetExtensions(extensions, privateuse);
@@ -469,17 +469,17 @@ namespace ICU4N.Impl.Locale
             // so no checks are necessary.
             if (language.Length > 0 && !LanguageTag.IsLanguage(language))
             {
-                throw new FormatException("Ill-formed language: " + language);
+                throw new LocaleSyntaxException("Ill-formed language: " + language);
             }
 
             if (script.Length > 0 && !LanguageTag.IsScript(script))
             {
-                throw new FormatException("Ill-formed script: " + script);
+                throw new LocaleSyntaxException("Ill-formed script: " + script);
             }
 
             if (region.Length > 0 && !LanguageTag.IsRegion(region))
             {
-                throw new FormatException("Ill-formed region: " + region); // ICU4N TODO: Port LocaleSyntaxException (instead of FormatException)
+                throw new LocaleSyntaxException("Ill-formed region: " + region); 
             }
 
             if (variant.Length > 0)
@@ -487,7 +487,7 @@ namespace ICU4N.Impl.Locale
                 int errIdx = CheckVariants(variant, BaseLocale.SEP);
                 if (errIdx != -1)
                 {
-                    throw new FormatException("Ill-formed variant: " + variant/*, errIdx*/);
+                    throw new LocaleSyntaxException("Ill-formed variant: " + variant/*, errIdx*/);
                 }
             }
 
@@ -793,7 +793,7 @@ namespace ICU4N.Impl.Locale
 
             public override int GetHashCode()
             {
-                return AsciiUtil.ToLowerString(_s).GetHashCode();
+                return AsciiUtil.ToLower(_s).GetHashCode();
             }
 
             public override bool Equals(object obj)
