@@ -10,17 +10,17 @@ namespace ICU4N.Impl.Locale
 {
     internal static class SpecialTypeExtensions
     {
-        private static IDictionary<KeyTypeData.SpecialType, KeyTypeData.SpecialTypeHandler> map =
-            new Dictionary<KeyTypeData.SpecialType, KeyTypeData.SpecialTypeHandler>
+        private static IDictionary<KeyTypeData.KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler> map =
+            new Dictionary<KeyTypeData.KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler>
         {
-            { KeyTypeData.SpecialType.CODEPOINTS, new KeyTypeData.CodepointsTypeHandler() },
-            { KeyTypeData.SpecialType.REORDER_CODE, new KeyTypeData.ReorderCodeTypeHandler() },
-            { KeyTypeData.SpecialType.RG_KEY_VALUE, new KeyTypeData.RgKeyValueTypeHandler() },
-            { KeyTypeData.SpecialType.SUBDIVISION_CODE, new KeyTypeData.SubdivisionKeyValueTypeHandler() },
-            { KeyTypeData.SpecialType.PRIVATE_USE, new KeyTypeData.PrivateUseKeyValueTypeHandler() },
+            { KeyTypeData.KeyTypeDataSpecialType.CODEPOINTS, new KeyTypeData.CodepointsTypeHandler() },
+            { KeyTypeData.KeyTypeDataSpecialType.REORDER_CODE, new KeyTypeData.ReorderCodeTypeHandler() },
+            { KeyTypeData.KeyTypeDataSpecialType.RG_KEY_VALUE, new KeyTypeData.RgKeyValueTypeHandler() },
+            { KeyTypeData.KeyTypeDataSpecialType.SUBDIVISION_CODE, new KeyTypeData.SubdivisionKeyValueTypeHandler() },
+            { KeyTypeData.KeyTypeDataSpecialType.PRIVATE_USE, new KeyTypeData.PrivateUseKeyValueTypeHandler() },
         };
 
-        public static KeyTypeData.SpecialTypeHandler GetHandler(this KeyTypeData.SpecialType specialType)
+        public static KeyTypeData.SpecialTypeHandler GetHandler(this KeyTypeData.KeyTypeDataSpecialType specialType)
         {
             return map.Get(specialType);
         }
@@ -110,10 +110,10 @@ namespace ICU4N.Impl.Locale
             public string LegacyId { get; private set; }
             public string BcpId { get; private set; }
             public IDictionary<string, Type> TypeMap { get; private set; }
-            public ISet<SpecialType> SpecialTypes { get; private set; }
+            public ISet<KeyTypeDataSpecialType> SpecialTypes { get; private set; }
 
             internal KeyData(string legacyId, string bcpId, IDictionary<string, Type> typeMap,
-                    ISet<SpecialType> specialTypes)
+                    ISet<KeyTypeDataSpecialType> specialTypes)
             {
                 this.LegacyId = legacyId;
                 this.BcpId = bcpId;
@@ -176,7 +176,7 @@ namespace ICU4N.Impl.Locale
                 }
                 if (keyData.SpecialTypes != null)
                 {
-                    foreach (SpecialType st in keyData.SpecialTypes)
+                    foreach (KeyTypeDataSpecialType st in keyData.SpecialTypes)
                     {
                         if (st.GetHandler().IsWellFormed(type))
                         {
@@ -210,7 +210,7 @@ namespace ICU4N.Impl.Locale
                 }
                 if (keyData.SpecialTypes != null)
                 {
-                    foreach (SpecialType st in keyData.SpecialTypes)
+                    foreach (KeyTypeDataSpecialType st in keyData.SpecialTypes)
                     {
                         if (st.GetHandler().IsWellFormed(type))
                         {
@@ -356,7 +356,7 @@ namespace ICU4N.Impl.Locale
                     }
 
                     IDictionary<string, Type> typeDataMap = new Dictionary<string, Type>();
-                    ISet<SpecialType> specialTypeSet = null;
+                    ISet<KeyTypeDataSpecialType> specialTypeSet = null;
 
                     // look up type map for the key, and walk through the mapping data
                     UResourceBundle typeMapResByKey = null;
@@ -385,9 +385,9 @@ namespace ICU4N.Impl.Locale
                                 {
                                     if (specialTypeSet == null)
                                     {
-                                        specialTypeSet = new HashSet<SpecialType>();
+                                        specialTypeSet = new HashSet<KeyTypeDataSpecialType>();
                                     }
-                                    specialTypeSet.Add((SpecialType)Enum.Parse(typeof(SpecialType), legacyTypeId, true));
+                                    specialTypeSet.Add((KeyTypeDataSpecialType)Enum.Parse(typeof(KeyTypeDataSpecialType), legacyTypeId, true));
                                     if (!_bcp47Types.Contains(legacyTypeId)) // ICU4N: Mimic LinkedHashSet with a List by not allowing duplicates
                                         _bcp47Types.Add(legacyTypeId);
                                     continue;
@@ -664,7 +664,7 @@ namespace ICU4N.Impl.Locale
                 // Type map data
                 Debug.Assert(typeData != null);
                 IDictionary<string, Type> typeDataMap = new Dictionary<string, Type>();
-                ISet<SpecialType> specialTypeSet = null;
+                ISet<KeyTypeDataSpecialType> specialTypeSet = null;
 
                 foreach (string[] typeDataEntry in typeData)
                 {
@@ -673,14 +673,14 @@ namespace ICU4N.Impl.Locale
 
                     // special types
                     bool isSpecialType = false;
-                    foreach (SpecialType st in Enum.GetValues(typeof(SpecialType)))
+                    foreach (KeyTypeDataSpecialType st in Enum.GetValues(typeof(KeyTypeDataSpecialType)))
                     {
                         if (legacyTypeId.Equals(st.ToString()))
                         {
                             isSpecialType = true;
                             if (specialTypeSet == null)
                             {
-                                specialTypeSet = new HashSet<SpecialType>();
+                                specialTypeSet = new HashSet<KeyTypeDataSpecialType>();
                             }
                             specialTypeSet.Add(st);
                             break;
@@ -728,10 +728,10 @@ namespace ICU4N.Impl.Locale
                     }
                 }
 
-                ISet<SpecialType> specialTypes = null;
+                ISet<KeyTypeDataSpecialType> specialTypes = null;
                 if (specialTypeSet != null)
                 {
-                    specialTypes = new HashSet<SpecialType>(specialTypeSet);
+                    specialTypes = new HashSet<KeyTypeDataSpecialType>(specialTypeSet);
                 }
 
                 KeyData keyData = new KeyData(legacyKeyId, bcpKeyId, typeDataMap, specialTypes);
