@@ -10,17 +10,17 @@ namespace ICU4N.Impl.Locale
 {
     internal static class SpecialTypeExtensions
     {
-        private static IDictionary<KeyTypeData.KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler> map =
-            new Dictionary<KeyTypeData.KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler>
+        private static IDictionary<KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler> map =
+            new Dictionary<KeyTypeDataSpecialType, KeyTypeData.SpecialTypeHandler>
         {
-            { KeyTypeData.KeyTypeDataSpecialType.CODEPOINTS, new KeyTypeData.CodepointsTypeHandler() },
-            { KeyTypeData.KeyTypeDataSpecialType.REORDER_CODE, new KeyTypeData.ReorderCodeTypeHandler() },
-            { KeyTypeData.KeyTypeDataSpecialType.RG_KEY_VALUE, new KeyTypeData.RgKeyValueTypeHandler() },
-            { KeyTypeData.KeyTypeDataSpecialType.SUBDIVISION_CODE, new KeyTypeData.SubdivisionKeyValueTypeHandler() },
-            { KeyTypeData.KeyTypeDataSpecialType.PRIVATE_USE, new KeyTypeData.PrivateUseKeyValueTypeHandler() },
+            { KeyTypeDataSpecialType.CODEPOINTS, new KeyTypeData.CodepointsTypeHandler() },
+            { KeyTypeDataSpecialType.REORDER_CODE, new KeyTypeData.ReorderCodeTypeHandler() },
+            { KeyTypeDataSpecialType.RG_KEY_VALUE, new KeyTypeData.RgKeyValueTypeHandler() },
+            { KeyTypeDataSpecialType.SUBDIVISION_CODE, new KeyTypeData.SubdivisionKeyValueTypeHandler() },
+            { KeyTypeDataSpecialType.PRIVATE_USE, new KeyTypeData.PrivateUseKeyValueTypeHandler() },
         };
 
-        public static KeyTypeData.SpecialTypeHandler GetHandler(this KeyTypeData.KeyTypeDataSpecialType specialType)
+        public static KeyTypeData.SpecialTypeHandler GetHandler(this KeyTypeDataSpecialType specialType)
         {
             return map.Get(specialType);
         }
@@ -28,14 +28,6 @@ namespace ICU4N.Impl.Locale
 
     public class KeyTypeData
     {
-        public enum KeyTypeDataValueType // ICU4N TODO: API de-nest and rename KeyTypeDataValueType
-        {
-            Single,
-            Multiple,
-            Incremental,
-            Any
-             // ICU4N TODO: API rename elements for .NET conventions
-        }
 
         internal abstract class SpecialTypeHandler
         {
@@ -96,14 +88,6 @@ namespace ICU4N.Impl.Locale
             }
         }
 
-        internal enum KeyTypeDataSpecialType // ICU4N TODO: API - rename values for .NET conventions
-        {
-            CODEPOINTS,
-            REORDER_CODE,
-            RG_KEY_VALUE,
-            SUBDIVISION_CODE,
-            PRIVATE_USE
-        }
 
         private class KeyData
         {
@@ -782,5 +766,23 @@ namespace ICU4N.Impl.Locale
         {
             return VALUE_TYPES.Get(key); // Defaults to ValueType.Single
         }
+    }
+
+    public enum KeyTypeDataValueType // ICU4N specific: API de-nest and rename KeyTypeDataValueType
+    {
+        SINGLE,
+        MULTIPLE,
+        INCREMENTAL,
+        ANY
+        // ICU4N specific: API rename elements for .NET conventions
+    }
+
+    internal enum KeyTypeDataSpecialType // ICU4N specific: API - rename values for .NET conventions
+    {
+        CODEPOINTS,
+        REORDER_CODE,
+        RG_KEY_VALUE,
+        SUBDIVISION_CODE,
+        PRIVATE_USE
     }
 }
