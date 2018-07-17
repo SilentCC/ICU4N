@@ -14,10 +14,10 @@ namespace ICU4N.Impl.Locale
         //
         // static fields
         //
-        public static readonly string SEP = "-"; // ICU4N TODO: API - rename to follow .NET Conventions
-        public static readonly string PRIVATEUSE = "x";
-        public static string UNDETERMINED = "und";
-        public static readonly string PRIVUSE_VARIANT_PREFIX = "lvariant";
+        public static readonly string Sep = "-"; // ICU4N DONE: API - rename to follow .NET Conventions
+        public static readonly string PrivateUse  = "x";
+        public static string Undetermined  = "und";
+        public static readonly string PrivuseVariantPrefix = "lvariant";
 
         //
         // Language subtag fields
@@ -33,7 +33,7 @@ namespace ICU4N.Impl.Locale
 
         // Map contains grandfathered tags and its preferred mappings from
         // http://www.ietf.org/rfc/rfc5646.txt
-        private static readonly IDictionary<AsciiUtil.CaseInsensitiveKey, string[]> GRANDFATHERED = // ICU4N TODO: API - rename to follow .NET Conventions
+        private static readonly IDictionary<AsciiUtil.CaseInsensitiveKey, string[]> GrandFathered  = // ICU4N DONE: API - rename to follow .NET Conventions
             new Dictionary<AsciiUtil.CaseInsensitiveKey, string[]>();
 
         static LanguageTag()
@@ -100,7 +100,7 @@ namespace ICU4N.Impl.Locale
             };
             foreach (string[] e in entries)
             {
-                GRANDFATHERED[new AsciiUtil.CaseInsensitiveKey(e[0])] = e;
+                GrandFathered[new AsciiUtil.CaseInsensitiveKey(e[0])] = e;
             }
         }
 
@@ -169,15 +169,15 @@ namespace ICU4N.Impl.Locale
 
             // Check if the tag is grandfathered
             string[] gfmap;
-            if (GRANDFATHERED.TryGetValue(new AsciiUtil.CaseInsensitiveKey(languageTag), out gfmap) && gfmap != null)
+            if (GrandFathered.TryGetValue(new AsciiUtil.CaseInsensitiveKey(languageTag), out gfmap) && gfmap != null)
             {
                 // use preferred mapping
-                itr = new StringTokenEnumerator(gfmap[1], SEP);
+                itr = new StringTokenEnumerator(gfmap[1], Sep);
                 isGrandfathered = true;
             }
             else
             {
-                itr = new StringTokenEnumerator(languageTag, SEP);
+                itr = new StringTokenEnumerator(languageTag, Sep);
             }
 
             // ICU4N: Move to the first element
@@ -375,7 +375,7 @@ namespace ICU4N.Impl.Locale
                         s = itr.Current;
                         if (IsExtensionSubtag(s))
                         {
-                            sb.Append(SEP).Append(s);
+                            sb.Append(Sep).Append(s);
                             sts.ParseLength = itr.CurrentEnd;
                         }
                         else
@@ -430,7 +430,7 @@ namespace ICU4N.Impl.Locale
                     {
                         break;
                     }
-                    sb.Append(SEP).Append(s);
+                    sb.Append(Sep).Append(s);
                     sts.ParseLength = itr.CurrentEnd;
 
                     itr.MoveNext();
@@ -550,11 +550,11 @@ namespace ICU4N.Impl.Locale
                         }
                         if (buf.Length > 0)
                         {
-                            buf.Append(SEP);
+                            buf.Append(Sep);
                         }
                         if (!JDKIMPL)
                         {
-                            prvv = AsciiUtil.ToLowerString(prvv);
+                            prvv = AsciiUtil.ToLower(prvv);
                         }
                         buf.Append(prvv);
                         varitr.MoveNext();
@@ -583,7 +583,7 @@ namespace ICU4N.Impl.Locale
                     {
                         extensions = new List<string>();
                     }
-                    extensions.Add(locextKey.ToString() + SEP + ext.Value);
+                    extensions.Add(locextKey.ToString() + Sep + ext.Value);
                 }
             }
 
@@ -598,11 +598,11 @@ namespace ICU4N.Impl.Locale
             {
                 if (privateuse == null)
                 {
-                    privateuse = PRIVUSE_VARIANT_PREFIX + SEP + privuseVar;
+                    privateuse = PrivuseVariantPrefix + Sep + privuseVar;
                 }
                 else
                 {
-                    privateuse = privateuse + SEP + PRIVUSE_VARIANT_PREFIX + SEP + privuseVar.Replace(BaseLocale.SEP, SEP);
+                    privateuse = privateuse + Sep + PrivuseVariantPrefix + Sep + privuseVar.Replace(BaseLocale.SEP, Sep);
                 }
             }
 
@@ -616,7 +616,7 @@ namespace ICU4N.Impl.Locale
                 // use lang "und" when 1) no language is available AND
                 // 2) any of other subtags other than private use are available or
                 // no private use tag is available
-                tag._language = UNDETERMINED;
+                tag._language = Undetermined;
             }
 
             return tag;
@@ -672,28 +672,28 @@ namespace ICU4N.Impl.Locale
             //                                     ;   extended language subtags
             //               / 4ALPHA              ; or reserved for future use
             //               / 5*8ALPHA            ; or registered language subtag
-            return (s.Length >= 2) && (s.Length <= 8) && AsciiUtil.IsAlphaString(s);
+            return (s.Length >= 2) && (s.Length <= 8) && AsciiUtil.IsAlpha(s);
         }
 
         public static bool IsExtlang(string s)
         {
             // extlang       = 3ALPHA              ; selected ISO 639 codes
             //                 *2("-" 3ALPHA)      ; permanently reserved
-            return (s.Length == 3) && AsciiUtil.IsAlphaString(s);
+            return (s.Length == 3) && AsciiUtil.IsAlpha(s);
         }
 
         public static bool IsScript(String s)
         {
             // script        = 4ALPHA              ; ISO 15924 code
-            return (s.Length == 4) && AsciiUtil.IsAlphaString(s);
+            return (s.Length == 4) && AsciiUtil.IsAlpha(s);
         }
 
         public static bool IsRegion(string s)
         {
             // region        = 2ALPHA              ; ISO 3166-1 code
             //               / 3DIGIT              ; UN M.49 code
-            return ((s.Length == 2) && AsciiUtil.IsAlphaString(s))
-                    || ((s.Length == 3) && AsciiUtil.IsNumericString(s));
+            return ((s.Length == 2) && AsciiUtil.IsAlpha(s))
+                    || ((s.Length == 3) && AsciiUtil.IsNumeric(s));
         }
 
         public static bool IsVariant(string s)
@@ -703,7 +703,7 @@ namespace ICU4N.Impl.Locale
             int len = s.Length;
             if (len >= 5 && len <= 8)
             {
-                return AsciiUtil.IsAlphaNumericString(s);
+                return AsciiUtil.IsAlphaNumeric(s);
             }
             if (len == 4)
             {
@@ -724,8 +724,8 @@ namespace ICU4N.Impl.Locale
             //               / %x79-7A             ; y - z
 
             return (s.Length == 1)
-                    && AsciiUtil.IsAlphaString(s)
-                    && !AsciiUtil.CaseIgnoreMatch(PRIVATEUSE, s);
+                    && AsciiUtil.IsAlpha(s)
+                    && !AsciiUtil.CaseIgnoreMatch(PrivateUse, s);
         }
 
         public static bool IsExtensionSingletonChar(char c)
@@ -736,25 +736,25 @@ namespace ICU4N.Impl.Locale
         public static bool IsExtensionSubtag(string s)
         {
             // extension     = singleton 1*("-" (2*8alphanum))
-            return (s.Length >= 2) && (s.Length <= 8) && AsciiUtil.IsAlphaNumericString(s);
+            return (s.Length >= 2) && (s.Length <= 8) && AsciiUtil.IsAlphaNumeric(s);
         }
 
         public static bool IsPrivateusePrefix(string s)
         {
             // privateuse    = "x" 1*("-" (1*8alphanum))
             return (s.Length == 1)
-                    && AsciiUtil.CaseIgnoreMatch(PRIVATEUSE, s);
+                    && AsciiUtil.CaseIgnoreMatch(PrivateUse, s);
         }
 
         public static bool IsPrivateusePrefixChar(char c)
         {
-            return (AsciiUtil.CaseIgnoreMatch(PRIVATEUSE, new string(new char[] { c })));
+            return (AsciiUtil.CaseIgnoreMatch(PrivateUse, new string(new char[] { c })));
         }
 
         public static bool IsPrivateuseSubtag(string s)
         {
             // privateuse    = "x" 1*("-" (1*8alphanum))
-            return (s.Length >= 1) && (s.Length <= 8) && AsciiUtil.IsAlphaNumericString(s);
+            return (s.Length >= 1) && (s.Length <= 8) && AsciiUtil.IsAlphaNumeric(s);
         }
 
         //
@@ -763,52 +763,52 @@ namespace ICU4N.Impl.Locale
 
         public static string CanonicalizeLanguage(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizeExtlang(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizeScript(string s)
         {
-            return AsciiUtil.ToTitleString(s);
+            return AsciiUtil.ToTitle(s);
         }
 
         public static string CanonicalizeRegion(string s)
         {
-            return AsciiUtil.ToUpperString(s);
+            return AsciiUtil.ToUpper(s);
         }
 
         public static string CanonicalizeVariant(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizeExtension(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizeExtensionSingleton(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizeExtensionSubtag(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizePrivateuse(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
         public static string CanonicalizePrivateuseSubtag(string s)
         {
-            return AsciiUtil.ToLowerString(s);
+            return AsciiUtil.ToLower(s);
         }
 
 
@@ -822,34 +822,34 @@ namespace ICU4N.Impl.Locale
 
                 foreach (string extlang in _extlangs)
                 {
-                    sb.Append(SEP).Append(extlang);
+                    sb.Append(Sep).Append(extlang);
                 }
 
                 if (_script.Length > 0)
                 {
-                    sb.Append(SEP).Append(_script);
+                    sb.Append(Sep).Append(_script);
                 }
 
                 if (_region.Length > 0)
                 {
-                    sb.Append(SEP).Append(_region);
+                    sb.Append(Sep).Append(_region);
                 }
 
                 foreach (string variant in _variants)
                 {
-                    sb.Append(SEP).Append(variant);
+                    sb.Append(Sep).Append(variant);
                 }
 
                 foreach (string extension in _extensions)
                 {
-                    sb.Append(SEP).Append(extension);
+                    sb.Append(Sep).Append(extension);
                 }
             }
             if (_privateuse.Length > 0)
             {
                 if (sb.Length > 0)
                 {
-                    sb.Append(SEP);
+                    sb.Append(Sep);
                 }
                 sb.Append(_privateuse);
             }

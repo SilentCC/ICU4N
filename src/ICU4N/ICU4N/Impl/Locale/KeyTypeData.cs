@@ -768,16 +768,16 @@ namespace ICU4N.Impl.Locale
         }
     }
 
-    public enum KeyTypeDataValueType // ICU4N specific: API de-nest and rename KeyTypeDataValueType
+    public enum KeyTypeDataValueType // ICU4N DONE: API de-nest and rename KeyTypeDataValueType
     {
         SINGLE,
         MULTIPLE,
         INCREMENTAL,
         ANY
-        // ICU4N specific: API rename elements for .NET conventions
+        // ICU4N DONE: API rename elements for .NET conventions
     }
 
-    internal enum KeyTypeDataSpecialType // ICU4N specific: API - rename values for .NET conventions
+    internal enum KeyTypeDataSpecialType // ICU4N DONE: API - rename values for .NET conventions
     {
         CODEPOINTS,
         REORDER_CODE,
